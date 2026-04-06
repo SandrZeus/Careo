@@ -16,6 +16,12 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+#Java Eclipse
+.project
+.classpath
+.settings/
+.factorypath
+
 # Environment
 .env
 *.local
