@@ -29,3 +29,5 @@ out/
 # Frontend (React / Node)
 node_modules/
 dist/
+
+bin/

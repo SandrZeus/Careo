@@ -45,8 +45,7 @@ public class CarController {
 
   @PostMapping
   public ResponseEntity<CarResponse> createCar(@RequestBody CreateCarRequest request) {
-    Car car = CarMapper.toEntity(request);
-    Car saved = carService.createCar(car);
+    Car saved = carService.createCar(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(CarMapper.toResponse(saved));
   }
 

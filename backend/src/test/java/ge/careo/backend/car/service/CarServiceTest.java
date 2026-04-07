@@ -3,9 +3,11 @@ package ge.careo.backend.car.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ge.careo.backend.car.dto.request.CreateCarRequest;
 import ge.careo.backend.car.dto.request.UpdateCarRequest;
 import ge.careo.backend.car.entity.Car;
 import ge.careo.backend.car.repository.CarRepository;
@@ -70,15 +72,19 @@ class CarServiceTest {
 
   @Test
   void createCar_returnsCar() {
-    Car car = new Car();
-    car.setMake("Porsche");
-    car.setModel("911 Turbo S");
-    car.setGeneration("992");
-    car.setProductionYear((short) 2021);
+    CreateCarRequest request = new CreateCarRequest();
+    request.setMake("Porsche");
+    request.setModel("911 Turbo S");
+    request.setGeneration("992");
+    request.setProductionYear((short) 2021);
 
-    when(carRepository.save(car)).thenReturn(car);
+    Car savedCar = new Car();
+    savedCar.setMake("Porsche");
+    savedCar.setModel("911 Turbo S");
 
-    Car result = carService.createCar(car);
+    when(carRepository.save(any(Car.class))).thenReturn(savedCar);
+
+    Car result = carService.createCar(request);
 
     assertEquals("Porsche", result.getMake());
     assertEquals("911 Turbo S", result.getModel());

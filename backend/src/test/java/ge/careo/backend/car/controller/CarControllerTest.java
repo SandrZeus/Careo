@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ge.careo.backend.car.dto.request.CreateCarRequest;
 import ge.careo.backend.car.dto.request.UpdateCarRequest;
 import ge.careo.backend.car.entity.Car;
 import ge.careo.backend.car.service.CarService;
@@ -46,6 +47,15 @@ class CarControllerTest {
   }
 
   @Test
+  void getCarById_returns500WhenNotFound() throws Exception {
+    UUID id = UUID.randomUUID();
+
+    when(carService.getCarById(id)).thenReturn(Optional.empty());
+
+    mockMvc.perform(get("/api/cars/{id}", id)).andExpect(status().isNotFound());
+  }
+
+  @Test
   void createCar_returns200() throws Exception {
     Car car = new Car();
     car.setMake("Porsche");
@@ -53,7 +63,7 @@ class CarControllerTest {
     car.setGeneration("992");
     car.setProductionYear((short) 2021);
 
-    when(carService.createCar(any(Car.class))).thenReturn(car);
+    when(carService.createCar(any(CreateCarRequest.class))).thenReturn(car);
 
     mockMvc
         .perform(
@@ -90,5 +100,20 @@ class CarControllerTest {
                     "{\"make\":\"Porsche\",\"model\":\"911 Turbo"
                         + " S\",\"generation\":\"992\",\"productionYear\":2021,\"power\":478}"))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  void updateCar_returns500WhenNotFound() throws Exception {
+    UUID id = UUID.randomUUID();
+
+    when(carService.updateCar(any(UUID.class), any(UpdateCarRequest.class)))
+        .thenThrow(new RuntimeException("Car not found"));
+
+    mockMvc
+        .perform(
+            put("/api/cars/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"make\":\"Porsche\"}"))
+        .andExpect(status().isNotFound());
   }
 }

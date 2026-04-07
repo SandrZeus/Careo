@@ -1,7 +1,9 @@
 package ge.careo.backend.car.service;
 
+import ge.careo.backend.car.dto.request.CreateCarRequest;
 import ge.careo.backend.car.dto.request.UpdateCarRequest;
 import ge.careo.backend.car.entity.Car;
+import ge.careo.backend.car.mapper.CarMapper;
 import ge.careo.backend.car.repository.CarRepository;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +26,8 @@ public class CarService {
     return carRepository.findById(id);
   }
 
-  public Car createCar(Car car) {
+  public Car createCar(CreateCarRequest request) {
+    Car car = CarMapper.toEntity(request);
     return carRepository.save(car);
   }
 
